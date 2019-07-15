@@ -1,0 +1,41 @@
+<div class="container">
+    <alert-success [hidden]="!showMessageSuccess">
+        O empregado <strong>{{employee?.name}}</strong> foi cadastrado com sucesso!
+    </alert-success>
+    <div class="row">
+        <h1>Nossos empregados</h1>
+        {{ data | date: 'fullDate' | uppercase}}
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <td colspan="4">
+                    <button class="btn btn-primary" (click)="openNewModal()">Novo empregado</button>
+                </td>
+            </tr>
+            <tr>
+                <th>Nome</th>
+                <th>Salário</th>
+                <th>Bônus</th>
+                <th>Ações</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let employee of employeeService.employees;let i=index;" [id]="'tr'+i" >
+                <td [innerHtml]="employee.name"></td>
+                <td [innerHtml]="employee.salary | myCurrency" [salaryColor]="employee.salary"></td>
+                <!--<td [innerHtml]="employee.salary"-->
+                    <!--[ngClass]="{'salary-expensive': employee.salary > 20000, 'salary-cheap': employee.salary < 1000}"></td>-->
+                <td>{{employee.bonus}}</td>
+                <td>
+                    <a href="javascript:void(0)" (click)="openEditModal(employee)">Editar</a> |
+                    <a href="javascript:void(0)" (click)="openDestroyModal(employee)">Excluir</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<employee-new-modal (onSubmit)="onNewEmployee($event)" (onHide)="fechou($event)"></employee-new-modal>
+<employee-edit-modal [employee]="employeeToEdit" (onSubmit)="onEditEmployee($event)"></employee-edit-modal>
+<employee-delete-modal [employee]="employeeToDelete" (onDestroy)="onDestroyEmployee($event)"></employee-delete-modal>
